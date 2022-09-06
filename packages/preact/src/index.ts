@@ -1,5 +1,5 @@
 import { options, Component, createElement } from "preact";
-import { useRef, useMemo } from "preact/hooks";
+import { useRef, useMemo, useEffect } from "preact/hooks";
 import {
 	signal,
 	computed,
@@ -281,6 +281,17 @@ export function useComputed<T>(compute: () => T) {
 	$compute.current = compute;
 	hasComputeds.add(currentComponent!);
 	return useMemo(() => computed<T>(() => $compute.current()), []);
+}
+
+export function useSignalEffect(cb: () => void) {
+	const callback = useRef(cb);
+	callback.current = cb;
+
+	useEffect(() => {
+		effect(() => {
+			callback.current();
+		})
+	}, [])
 }
 
 /**
