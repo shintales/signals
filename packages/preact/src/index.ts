@@ -1,5 +1,5 @@
 import { options, Component, createElement } from "preact";
-import { useRef, useMemo, useEffect } from "preact/hooks";
+import { useRef, useMemo, useLayoutEffect } from "preact/hooks";
 import {
 	signal,
 	computed,
@@ -287,11 +287,9 @@ export function useSignalEffect(cb: () => void) {
 	const callback = useRef(cb);
 	callback.current = cb;
 
-	useEffect(() => {
-		return effect(() => {
-			callback.current();
-		})
-	}, [])
+	useLayoutEffect(() => effect(() => {
+		callback.current();
+	}), []);
 }
 
 /**
